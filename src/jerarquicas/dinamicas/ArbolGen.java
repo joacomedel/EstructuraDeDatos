@@ -1,5 +1,7 @@
 package jerarquicas.dinamicas;
 
+import javax.xml.catalog.CatalogManager;
+
 import jerarquicas.dinamicas.NodoArbol;
 import lineales.dinamicas.Lista;
 import lineales.dinamicas.Nodo;
@@ -199,6 +201,45 @@ public class ArbolGen {
             lista.insertar(nodo.getElem(), lista.longitud()+1);
         }
     }
+    public boolean sonFrontera(Lista lista){
+        boolean esFrontera = false;
+        int []cantidadHojas =  new int[1];
+        cantidadHojas[0] = 0;
+        if (this.esVacio() && lista.esVacia()) {
+            esFrontera = true;
+        }else{
+            //Podriamos no mandar cuando la lista es vacia ya que siempre hay alguna hoja
+            esFrontera = sonFronteraAux(this.raiz, lista,cantidadHojas);
+            if (lista.longitud() > cantidadHojas[0]) {
+                esFrontera = false;
+            }
+        }
+        return esFrontera;
+    }
+    private boolean sonFronteraAux(NodoArbol nodo , Lista lista, int[]cantidadHojas){
+        boolean esFrontera = true;
+        if (nodo != null) {
+            if (null == nodo.getHijo(0)) {
+                cantidadHojas[0]++;
+                boolean encontrado = false;
+                Lista clon = lista.clone();
+                while (!encontrado && !clon.esVacia()) {
+                    encontrado = nodo.getElem().equals(lista.recuperar(1));
+                    lista.eliminar(1);
+                }
+                esFrontera = encontrado;
+            }
+            if (esFrontera) {
+                esFrontera = sonFronteraAux(nodo.getHijo(0), lista,cantidadHojas);
+                if (esFrontera) {
+                    esFrontera = sonFronteraAux(nodo.getHijo(1), lista,cantidadHojas);
+                }
+            }
+        }
+        return esFrontera;
+    }
+
+
     public boolean esVacio() {
         return this.raiz == null;
     }
