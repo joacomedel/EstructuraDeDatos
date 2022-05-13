@@ -2,6 +2,7 @@ package jerarquicas.dinamicas;
 
 import jerarquicas.dinamicas.NodoArbol;
 import lineales.dinamicas.Lista;
+import lineales.dinamicas.Nodo;
 
 public class ArbolGen {
     NodoArbol raiz;
@@ -45,7 +46,73 @@ public class ArbolGen {
         }
         return nodoTemp;
     }
+    public Lista ancestro(Object obj){
+        Lista lista = new Lista();
+        if (!this.esVacio()) {
+            ancestroAux(obj, this.raiz,lista);
+            lista.eliminar(1); 
+        }
+        return lista;
+    }
+    private void ancestroAux(Object obj , NodoArbol nodo,Lista lista){
+        boolean extHijoIzq;
+        extHijoIzq = nodo.getHijo(0) != null;
+        if (extHijoIzq) {
+            ancestroAux(obj, nodo.getHijo(0), lista);
+            if (lista.esVacia()) {
+                NodoArbol temp = nodo.getHijo(0).getHijo(1); //Selecciona el hermano derecho del nodo izquierdo
+                while (temp != null) {
+                    ancestroAux(obj, temp, lista);
+                    if (lista.esVacia()) {
+                        temp = temp.getHijo(1);
+                    } else {
+                        temp = null;
+                    }
+                }
+            }
+        }
+        if (!lista.esVacia()|| nodo.getElem().equals(obj)) {
+            lista.insertar(nodo.getElem(), lista.longitud()+1);
+        }
+    }
 
+    public boolean pertenece(Object obj){
+        boolean pertenece = false;
+        if(!this.esVacio()){
+            pertenece  = null == buscarNodo(this.raiz, obj);
+        }
+        return pertenece;
+    }
+    public int altura() {
+        int[] altura = new int[2];
+        altura[0] = -1;
+        altura[1] = -1;
+        // AlturaYnivel[]0 altura ||| AlturaYnivel[1] nivelDelNodo
+        if (!esVacio()) {
+            alturaAux(this.raiz, altura);
+        }
+        return altura[0];
+    }
+
+    private void alturaAux(NodoArbol nodo, int[] alturaYnivel) {
+            Boolean extHijoIzq;
+            extHijoIzq = nodo.getHijo(0) != null;
+            alturaYnivel[1]++; // Como ingresamos en un nuevo nodo su nivel se suma
+            alturaYnivel[0] = Math.max(alturaYnivel[0], alturaYnivel[1]);
+            // AlturaYnivel[]0 altura ||| AlturaYnivel[1] nivelDelNodo
+            if (extHijoIzq) {
+                alturaAux(nodo.getHijo(0), alturaYnivel);
+                NodoArbol temp = nodo.getHijo(0).getHijo(1);
+                while (temp != null) {
+                    alturaAux(temp, alturaYnivel);
+                    temp = temp.getHijo(1);
+                }
+                
+            }
+            alturaYnivel[1]--;
+            }
+             // Como termina el metodo y vamos a subir restamos a la altura
+        
     public String toString() {
         String cadena = "";
         if (!this.esVacio()) {
@@ -110,7 +177,6 @@ public class ArbolGen {
                     temp = temp.getHijo(1);
                 }
             }
-            
         }
     }
     public Lista listarPosorden() {

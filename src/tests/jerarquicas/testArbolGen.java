@@ -14,9 +14,7 @@ public class testArbolGen {
         arbol.insertar("h","e");
         arbol.insertar("x","a");
         System.out.println(arbol);
-        System.out.println(arbol.listarPreorden());
-        System.out.println(arbol.listarInorden());
-        System.out.println(arbol.listarPosorden());
+        System.out.println(arbol.altura());
     }
     
 }
