@@ -1,4 +1,4 @@
-package tests.jerarquicas;
+package tests.jerarquicas.test;
 import jerarquicas.dinamicas.ArbolBin;
 import lineales.dinamicas.Lista;
 
@@ -13,15 +13,14 @@ public class testArbolBin {
         arbol.insertar("g","e",0);
         arbol.insertar("f","c",1);
         arbol.insertar("h","e",1);*/
-        arbol.insertar('a',null,0);
-        arbol.insertar('b','a',0);
-        arbol.insertar('f','a',1);
-        arbol.insertar('c','b',0);
-        arbol.insertar('d','b',1);
-        arbol.insertar('a','d',1);
+        arbol.insertar('a',null,'I');
+        arbol.insertar('b','a','I');
+        arbol.insertar('f','a','D');
+        arbol.insertar('c','b','I');
+        arbol.insertar('d','b','D');
         System.out.println(arbol);
-
-        System.out.println(arbol.clonarInvertido());
+        System.out.println(arbol.padre('a'));
+        
         /*String listaString =  "aba";
         Lista lista = new Lista();
         for (int i = 0; i < listaString.length(); i++) {

@@ -1,7 +1,7 @@
-package tests.lineales;
+package tests.lineales.testing;
 
-	//import lineales.estaticas.Cola;
-	 import lineales.dinamicas.Cola;
+	import lineales.estaticas.Cola;
+	// import lineales.dinamicas.Cola;
 
 
 

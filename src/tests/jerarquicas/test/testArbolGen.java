@@ -1,4 +1,4 @@
-package tests.jerarquicas;
+package tests.jerarquicas.test;
 import jerarquicas.dinamicas.ArbolGen;
 
 public class testArbolGen {
@@ -6,15 +6,17 @@ public class testArbolGen {
         ArbolGen arbol = new ArbolGen();
         arbol.insertar("a","a");
         arbol.insertar("b","a");
-        arbol.insertar("d","b");
         arbol.insertar("c","a");
-        arbol.insertar("e","c");
-        arbol.insertar("f","c");
-        arbol.insertar("g","e");
+        arbol.insertar("d","a");
+        arbol.insertar("e","b");
+        arbol.insertar("f","d");
+        arbol.insertar("g","d");
         arbol.insertar("h","e");
-        arbol.insertar("x","a");
+        arbol.insertar("i","e");
+        arbol.insertar("j","e");
+        arbol.insertar("k","i");
         System.out.println(arbol);
-        System.out.println(arbol.altura());
+        System.out.println(arbol.listarPorNiveles());
     }
     
 }

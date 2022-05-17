@@ -16,6 +16,7 @@ public class Lista {
         if (posc > 0 && posc <= this.tamanio + 1) {
             if (posc == 1) {
                 cabecera = new Nodo(objetoIn, this.cabecera);
+                exito = true;
             } else {
                 Nodo aux = this.cabecera;
                 int i = 1;
@@ -24,6 +25,7 @@ public class Lista {
                     i++;
                 }
                 aux.setEnlace(new Nodo(objetoIn, aux.getEnlace()));
+                exito = true;
             }
             tamanio++;
         }
@@ -77,11 +79,11 @@ public class Lista {
         if (!this.esVacia()) {
             int i = 1;
             Nodo aux = this.cabecera;
-            while (!aux.getElem().equals(objIn) && aux != null) {
+            while (aux != null && !aux.getElem().equals(objIn) ) {
                 aux = aux.getEnlace();
                 i++;
             }
-            if (aux.getElem().equals(objIn)) {
+            if (aux != null) {
                 posc = i;
             }
         }

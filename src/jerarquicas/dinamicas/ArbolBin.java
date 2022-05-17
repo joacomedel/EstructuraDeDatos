@@ -11,7 +11,7 @@ public class ArbolBin {
         raiz = null;
     }
 
-    public boolean insertar(Object elemIn, Object elemPadre, int posc) {
+    public boolean insertar(Object elemIn, Object elemPadre, char posc) {
         // Insertamos , el usuario nos pasa el elemento del padre y la posicion del hijo
         // 0 der 1 izq
         boolean exito = false;
@@ -20,11 +20,23 @@ public class ArbolBin {
             exito = true;
         } else {
             NodoArbol nodoPadre = buscarNodo(elemPadre, this.raiz);
-            if (nodoPadre.getHijo(posc) == null) {
-                nodoPadre.setHijo(posc, new NodoArbol(elemIn));
-                exito = true;
+            if (posc == 'I' && nodoPadre != null) {
+                if (nodoPadre.getHijo(0) == null) {
+                    nodoPadre.setHijo(0, new NodoArbol(elemIn));
+                    exito = true;
+                }
+            }else{
+                if (posc == 'D' && nodoPadre != null) {
+                    if (nodoPadre.getHijo(1) == null) {
+                        nodoPadre.setHijo(1, new NodoArbol(elemIn));
+                        exito = true;
+                    } 
+                }
             }
+
+            
         }
+
         return exito;
     }
 
@@ -46,65 +58,46 @@ public class ArbolBin {
         return nodoRetornado;
     }
 
-    public Lista listaPreorden() {
-        Lista lista = new Lista();
-        preOrdenAux(this.raiz, lista);
-        return lista;
+    public boolean esVacio() {
+        return this.raiz == null;
     }
 
-    private void preOrdenAux(NodoArbol nodo, Lista lista) {
-        if (nodo != null) {
-            lista.insertar(nodo.getElem(), lista.longitud() + 1);
-            preOrdenAux(nodo.getHijo(0), lista);
-            preOrdenAux(nodo.getHijo(1), lista);
-        }
-    }
-
-    public Lista listaInorden() {
-        Lista lista = new Lista();
-        inOrdenAux(this.raiz, lista);
-        return lista;
-    }
-
-    private void inOrdenAux(NodoArbol nodo, Lista lista) {
-        if (nodo != null) {
-            inOrdenAux(nodo.getHijo(0), lista);
-            lista.insertar(nodo.getElem(), lista.longitud() + 1);
-            inOrdenAux(nodo.getHijo(1), lista);
-        }
-    }
-
-    public Lista listaPosorden() {
-        Lista lista = new Lista();
-        posOrdenAux(this.raiz, lista);
-        return lista;
-    }
-
-    private void posOrdenAux(NodoArbol nodo, Lista lista) {
-        if (nodo != null) {
-            posOrdenAux(nodo.getHijo(0), lista);
-            posOrdenAux(nodo.getHijo(1), lista);
-            lista.insertar(nodo.getElem(), lista.longitud() + 1);
-        }
-    }
-
-    public Lista listaNiveles() {
-        Lista lista = new Lista();
-        Cola cola = new Cola();
-        cola.poner(this.raiz);
-        while (cola.obtenerFrente() != null) {
-            NodoArbol nodo;
-            nodo = (NodoArbol) cola.obtenerFrente();
-            cola.sacar();
-            lista.insertar(nodo.getElem(), lista.longitud() + 1);
-            if (nodo.getHijo(0) != null) {
-                cola.poner(nodo.getHijo(0));
-            }
-            if (nodo.getHijo(1) != null) {
-                cola.poner(nodo.getHijo(1));
+    public Object padre(Object obj) {
+        Object padre = null;
+        if (!this.esVacio()) {
+            if (obj != null && !obj.equals(this.raiz.getElem())) {
+                padre = padreAux(obj, this.raiz);
             }
         }
-        return lista;
+        return padre;
+    }
+
+    private Object padreAux(Object obj, NodoArbol nodo) {
+        Object temp = null;
+        Boolean esPadre = false;
+        Boolean extIzq = nodo.getHijo(0) != null;
+        boolean extDer = nodo.getHijo(1) != null;
+        if (extIzq) {
+            esPadre = nodo.getHijo(0).getElem().equals(obj);// Verificamos si el hijo izquierdo es padre
+        }
+        if (esPadre) {
+            temp = nodo.getElem(); // Si entro aca no va al recursivo
+        } else {
+            if (extDer) {
+                esPadre = nodo.getHijo(1).getElem().equals(obj);
+            }
+            if (esPadre) {
+                temp = nodo.getElem();// Si entro aca no va al recursivo
+            } else {
+                if (extIzq) {
+                    temp = padreAux(obj, nodo.getHijo(0));
+                }
+                if (temp == null && extDer) {
+                    temp = padreAux(obj, nodo.getHijo(1));
+                }
+            }
+        }
+        return temp;
     }
 
     public int altura() {
@@ -127,33 +120,6 @@ public class ArbolBin {
             alturaYnivel[1]--; // Como termina el metodo y vamos a subir restamos a la altura
         }
 
-    }
-
-    public boolean esVacio() {
-        return this.raiz == null;
-    }
-
-    public String toString() {
-        return stringAux(this.raiz, "");
-    }
-
-    private String stringAux(NodoArbol nodo, String cadena) {
-        String izq = " ";
-        String der = " ";
-        Boolean izqExis = nodo.getHijo(0) != null;
-        Boolean derExis = nodo.getHijo(1) != null;
-        if (izqExis)
-            izq = nodo.getHijo(0).getElem() + "";
-        if (derExis)
-            der = nodo.getHijo(1).getElem() + "";
-
-        cadena = cadena + "[" + nodo.getElem() + "]" + ":" + "[" + izq + "]" + "[" + der + "]" + "\n";
-
-        if (izqExis)
-            cadena = stringAux(nodo.getHijo(0), cadena);
-        if (derExis)
-            cadena = stringAux(nodo.getHijo(1), cadena);
-        return cadena;
     }
 
     public int nivel(Object elem) {
@@ -180,6 +146,121 @@ public class ArbolBin {
         return niv;
     }
 
+    public void vaciar() {
+        this.raiz = null;
+    }
+
+    public ArbolBin clone() {
+        ArbolBin clon = new ArbolBin();
+        if (!this.esVacio()) {
+            clon.raiz = new NodoArbol(null);
+            cloneAux(this.raiz, clon.raiz);
+        }
+        return clon;
+    }
+
+    private void cloneAux(NodoArbol thisNodo, NodoArbol clonNodo) {
+        clonNodo.setElem(thisNodo.getElem());
+        if (thisNodo.getHijo(0) != null) { 
+            clonNodo.setHijo(0, new NodoArbol(null)); 
+            cloneAux(thisNodo.getHijo(0), clonNodo.getHijo(0));
+        }
+        if (thisNodo.getHijo(1) != null) { 
+            clonNodo.setHijo(1, new NodoArbol(null)); 
+            cloneAux(thisNodo.getHijo(1), clonNodo.getHijo(1));
+        }
+    }
+
+    public String toString() {
+        String cadena = "";
+        if (!this.esVacio()) {
+            cadena = stringAux(this.raiz, "");
+        }
+
+        return cadena;
+    }
+
+    private String stringAux(NodoArbol nodo, String cadena) {
+        String izq = " ";
+        String der = " ";
+        Boolean izqExis = nodo.getHijo(0) != null;
+        Boolean derExis = nodo.getHijo(1) != null;
+        if (izqExis)
+            izq = nodo.getHijo(0).getElem() + "";
+        if (derExis)
+            der = nodo.getHijo(1).getElem() + "";
+
+        cadena = cadena + "[" + nodo.getElem() + "]" + ":" + "[" + izq + "]" + "[" + der + "]" + "\n";
+
+        if (izqExis)
+            cadena = stringAux(nodo.getHijo(0), cadena);
+        if (derExis)
+            cadena = stringAux(nodo.getHijo(1), cadena);
+        return cadena;
+    }
+
+    public Lista listarPreorden() {
+        Lista lista = new Lista();
+        preOrdenAux(this.raiz, lista);
+        return lista;
+    }
+
+    private void preOrdenAux(NodoArbol nodo, Lista lista) {
+        if (nodo != null) {
+            lista.insertar(nodo.getElem(), lista.longitud() + 1);
+            preOrdenAux(nodo.getHijo(0), lista);
+            preOrdenAux(nodo.getHijo(1), lista);
+        }
+    }
+
+    public Lista listarInorden() {
+        Lista lista = new Lista();
+        inOrdenAux(this.raiz, lista);
+        return lista;
+    }
+
+    private void inOrdenAux(NodoArbol nodo, Lista lista) {
+        if (nodo != null) {
+            inOrdenAux(nodo.getHijo(0), lista);
+            lista.insertar(nodo.getElem(), lista.longitud() + 1);
+            inOrdenAux(nodo.getHijo(1), lista);
+        }
+    }
+
+    public Lista listarPosorden() {
+        Lista lista = new Lista();
+        posOrdenAux(this.raiz, lista);
+        return lista;
+    }
+
+    private void posOrdenAux(NodoArbol nodo, Lista lista) {
+        if (nodo != null) {
+            posOrdenAux(nodo.getHijo(0), lista);
+            posOrdenAux(nodo.getHijo(1), lista);
+            lista.insertar(nodo.getElem(), lista.longitud() + 1);
+        }
+    }
+
+    public Lista listarPorNiveles() {
+        Lista lista = new Lista();
+        Cola cola = new Cola();
+        cola.poner(this.raiz);
+        while (cola.obtenerFrente() != null) {
+            NodoArbol nodo;
+            nodo = (NodoArbol) cola.obtenerFrente();
+            cola.sacar();
+            lista.insertar(nodo.getElem(), lista.longitud() + 1);
+            if (nodo.getHijo(0) != null) {
+                cola.poner(nodo.getHijo(0));
+            }
+            if (nodo.getHijo(1) != null) {
+                cola.poner(nodo.getHijo(1));
+            }
+        }
+        return lista;
+    }
+
+    // otras
     public boolean verificarPatron(Lista listaPatron) {
         boolean patronExiste = false;
         if (!this.esVacio()) {
@@ -187,13 +268,19 @@ public class ArbolBin {
         }
         return patronExiste;
     }
-    private  boolean verificarPatronAux(Lista listaPatron, NodoArbol nodo, int posc) {
-        boolean patronExiste = true; //Valor base el patron es aceptado , ya que si llegamos a un nodo nulo tenemos que retornar true
+
+    private boolean verificarPatronAux(Lista listaPatron, NodoArbol nodo, int posc) {
+        boolean patronExiste = true; // Valor base el patron es aceptado , ya que si llegamos a un nodo nulo tenemos
+                                     // que retornar true
         if (nodo != null) {
-            patronExiste = listaPatron.recuperar(posc).equals(nodo.getElem());//verificamos si el obj de nodo es igual al de la posicion de la lista
-            if (patronExiste && posc < listaPatron.longitud()) { //Si es verdadero queda verificar con los hijos y la siguiente posicion
-                patronExiste = verificarPatronAux(listaPatron, nodo.getHijo(0), posc + 1); //Verificamos con el hijo izquierdo
-                if (!patronExiste) { //Si en el izquierdo no esta el patron vamos a los derechos , recorrido posorden
+            patronExiste = listaPatron.recuperar(posc).equals(nodo.getElem());// verificamos si el obj de nodo es igual
+                                                                              // al de la posicion de la lista
+            if (patronExiste && posc < listaPatron.longitud()) { // Si es verdadero queda verificar con los hijos y la
+                                                                 // siguiente posicion
+                patronExiste = verificarPatronAux(listaPatron, nodo.getHijo(0), posc + 1); // Verificamos con el hijo
+                                                                                           // izquierdo
+                if (!patronExiste) { // Si en el izquierdo no esta el patron vamos a los derechos , recorrido
+                                     // posorden
                     patronExiste = verificarPatronAux(listaPatron, nodo.getHijo(1), posc + 1);
                 }
             }
@@ -201,25 +288,42 @@ public class ArbolBin {
         return patronExiste;
     }
 
-    public ArbolBin clonarInvertido(){
+    public ArbolBin clonarInvertido() {
         ArbolBin clon = new ArbolBin();
         if (!this.esVacio()) {
             clon.raiz = new NodoArbol(null);
-            clonAux(this.raiz,clon.raiz);
+            clonAuxInv(this.raiz, clon.raiz);
         }
         return clon;
     }
-    public void clonAux(NodoArbol thisNodo , NodoArbol clonNodo) {
+    public void clonAuxInv(NodoArbol thisNodo, NodoArbol clonNodo) {
         clonNodo.setElem(thisNodo.getElem());
-            if (thisNodo.getHijo(0) != null) { //Verifico que le hijo izquierdo existe
-                clonNodo.setHijo(1, new NodoArbol(null)); //Creo que hijo derecho del nodo clon
-                clonAux(thisNodo.getHijo(0), clonNodo.getHijo(1));
-                //Paso el hijo izquierdo del ArbolBin y el hijo derecho del Clon
+        if (thisNodo.getHijo(0) != null) { // Verifico que le hijo izquierdo existe
+            clonNodo.setHijo(1, new NodoArbol(null)); // Creo que hijo derecho del nodo clon
+            clonAuxInv(thisNodo.getHijo(0), clonNodo.getHijo(1));
+            // Paso el hijo izquierdo del ArbolBin y el hijo derecho del Clon
+        }
+        if (thisNodo.getHijo(1) != null) { // Verifico que le hijo derecho existe
+            clonNodo.setHijo(0, new NodoArbol(null)); // Creo que hijo izquierdo del nodo clon
+            clonAuxInv(thisNodo.getHijo(1), clonNodo.getHijo(0));
+            // Paso el hijo derecho del ArbolBin y el hijo derecho del Clon
+        }
+    }
+
+    public Lista frontera() {
+        Lista lista = new Lista();
+        if (!this.esVacio()) {
+            fronteraAux(this.raiz, lista);
+        }
+        return lista;
+    }
+    private void fronteraAux(NodoArbol nodo, Lista lista) {
+        if (nodo != null) {
+            if (nodo.getHijo(0) == null && nodo.getHijo(1) == null) {
+                lista.insertar(nodo.getElem(), lista.longitud() + 1);
             }
-            if (thisNodo.getHijo(1) != null) { //Verifico que le hijo derecho existe
-                clonNodo.setHijo(0, new NodoArbol(null)); //Creo que hijo izquierdo del nodo clon
-                clonAux(thisNodo.getHijo(1), clonNodo.getHijo(0));
-                //Paso el hijo derecho del ArbolBin y el hijo derecho del Clon
-            } 
+            fronteraAux(nodo.getHijo(0), lista);
+            fronteraAux(nodo.getHijo(1), lista);
+        }
     }
 }
