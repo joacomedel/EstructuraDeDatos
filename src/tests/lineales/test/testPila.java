@@ -1,4 +1,4 @@
-package tests.lineales;
+package tests.lineales.test;
 import java.util.Scanner;
 //import src.lineales.estaticas.Pila;
 import lineales.dinamicas.Pila;
