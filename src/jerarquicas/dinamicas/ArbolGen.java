@@ -22,23 +22,7 @@ public class ArbolGen {
             if (nodoTemp == null) {
                 nodoArbol.setHijo(0, new NodoArbol(objNodo));
             }else{
-                while (nodoTemp.getHijo(1) != null) {
-                    nodoTemp = nodoTemp.getHijo(1);
-                }
-                nodoTemp.setHijo(1, new NodoArbol(objNodo));
-            }
-            exito = true;
-        }
-        return exito;
-    }
-
-    public NodoArbol buscarNodo(NodoArbol nodoIn, Object obj) {
-        NodoArbol nodoTemp = null;
-        if (nodoIn != null) {
-            if (nodoIn.getElem().equals(obj)) {
-                nodoTemp = nodoIn;
-            } else {
-                nodoTemp = buscarNodo(nodoIn.getHijo(0), obj);
+                nodo);
                 if (nodoTemp == null) {
                     nodoTemp = buscarNodo(nodoIn.getHijo(1), obj); // GetHijo(1)Obtiene el hermano izquierdo
                 }
@@ -201,5 +185,44 @@ public class ArbolGen {
     }
     public boolean esVacio() {
         return this.raiz == null;
+    }
+    public boolean sonFrontera(Lista lista){
+        boolean esFrontera = false;
+        if (this.esVacio()) {
+            if (lista.esVacia()) {
+                esFrontera = true;
+            }
+        }
+        else {
+            int []i;
+            i[0]=0;
+            esFrontera = sonFronteraAux(lista, this.raiz,i);
+            
+        }
+        
+        return esFrontera;
+    }
+    private boolean sonFronteraAux (Lista lista , NodoArbol nodo, int []cantHojas){
+        boolean esFrontera = true;
+        if (nodo != null) {
+            if (nodo.getHijo(0) == null) {
+                Lista clon = lista.clone();
+                boolean encontrado = false;
+                int i = 1;
+                while (!encontrado && !clon.esVacia()) {
+                    encontrado = lista.recuperar(1).equals(nodo.getElem());
+                    lista.eliminar(1);
+                }
+                esFrontera = encontrado;
+            }
+            if (esFrontera) {
+                esFrontera = sonFronteraAux(lista, nodo.getHijo(0));
+                if (esFrontera) {
+                    esFrontera = sonFronteraAux(lista, nodo.getHijo(1));
+                }
+            }
+     
+        }
+        return esFrontera;
     }
 }
