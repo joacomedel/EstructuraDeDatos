@@ -155,7 +155,6 @@ public class Heap {
         return ultimo == heap.length - 1;
     }
     public String toString() {
-        int longi = heap.length;
         String cadena = "";
         for (int i = 1; i <= ultimo; i++) {
             cadena = cadena+ "["+ heap[i]+"]";
