@@ -408,13 +408,13 @@ public class ArbolGen {
 
     private boolean verificarCaminoAux(Lista lista , NodoGen nodo) {
         boolean termino = false;
-        if (nodo != null) {
+        if (nodo != null && !lista.esVacia()) {
             if (lista.recuperar(1).equals(nodo.getElem())) {
                 Boolean esHoja = nodo.getHijoIzq() == null;
                 Object obj = lista.recuperar(1);
                 lista.eliminar(1);
-                termino = lista.esVacia() && esHoja;
-                if (!termino) {
+                termino = lista.esVacia()&& esHoja;
+                if (!termino && !lista.esVacia()) {
                     termino = verificarCaminoAux(lista,nodo.getHijoIzq());
                     if (!termino) {
                         if (nodo.getHijoIzq() != null) {
@@ -424,12 +424,11 @@ public class ArbolGen {
                                 der = der.getHermanoDer();
                             }
                         }
-                        
                     }
-                    if (!termino) {
-                        lista.insertar(obj, 1);
-                    }
-                }  
+                }
+                if (!termino) {
+                    lista.insertar(obj, 1);
+                }
             }
         }
         return termino;

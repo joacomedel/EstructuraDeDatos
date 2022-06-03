@@ -12,7 +12,7 @@ public class testArbolGen {
         arbol.insertar('E', 'C');
         arbol.insertar('G', 'E');
         arbol.insertar('H', 'E');
-        arbol.insertar('F', 'C');
+        arbol.insertar('E', 'C');
         Lista lista = new Lista();
         lista.insertar('A', 1);
         lista.insertar('C', 2);
