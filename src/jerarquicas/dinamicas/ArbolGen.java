@@ -7,7 +7,7 @@ import lineales.dinamicas.Lista;
 import lineales.dinamicas.Nodo;
 
 public class ArbolGen {
-    NodoGen raiz;
+    private NodoGen raiz;
 
     public ArbolGen() {
         raiz = null;

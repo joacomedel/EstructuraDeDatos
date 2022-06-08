@@ -1,9 +1,9 @@
 package jerarquicas.dinamicas;
 
 public class NodoGen {
-    NodoGen hijoIzq;
-    NodoGen hermanoDer;
-    Object elem;
+    private NodoGen hijoIzq;
+    private NodoGen hermanoDer;
+    private Object elem;
     public NodoGen(Object elemIn ){
         this.elem = elemIn;
         hijoIzq = null;
