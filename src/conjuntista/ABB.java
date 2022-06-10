@@ -1,11 +1,12 @@
 package conjuntista;
 
-import java.util.Optional;
+import javax.lang.model.util.ElementScanner14;
 
 import lineales.dinamicas.Lista;
 
 public class ABB {
-    NodoArbol raiz;
+    private NodoArbol raiz;
+    private boolean booleanEliminado;
 
     public ABB() {
         raiz = null;
@@ -53,10 +54,22 @@ public class ABB {
         if (nodo.getIzq() == null && nodo.getDer() == null) {
             caso = 1; // Caso 1 de la teoria , es hoja
         } else {
+<<<<<<< HEAD
             if (nodo.getIzq() == null && nodo.getDer() != null || (nodo.getIzq() != null && nodo.getDer() == null)) {
                 caso = 2; // Caso 2
             } else {
                 caso = 3; // Caso 3 tiene dos hijos
+=======
+            if (nodo.getIzq() == null && nodo.getDer() != null ) {
+                caso = 4; // Caso 2 tiene solo derecho
+            } else {
+                if ((nodo.getIzq() != null && nodo.getDer() == null)) {
+                    caso = 2; // Caso 4 tiene solo izquierdo
+                } else {
+                    caso = 3; // Caso 3 tiene dos hijos
+                }
+                
+>>>>>>> ff53672660e2cd2fc80c5ad8616f7a0c307be1bb
             }
         }
         return caso;
@@ -109,13 +122,21 @@ public class ABB {
     }
 
     public boolean eliminar(Comparable comp) {
+<<<<<<< HEAD
         boolean exito = false;
+=======
+>>>>>>> ff53672660e2cd2fc80c5ad8616f7a0c307be1bb
         if (!this.esVacio()) {
-            exito = eliminarAux(comp, this.raiz);
+            if (this.raiz.getElem().compareTo(comp) == 0) {
+                eliminarRaiz();
+            } else {
+                eliminarAux(comp, this.raiz);
+            }
         }
-        return exito;
+        return getBooleanEliminado();
     }
 
+<<<<<<< HEAD
     private boolean eliminarAux(Comparable comp, NodoArbol nodo) {
         boolean exito = false;
         int compareTo = nodo.getElem().compareTo(comp);
@@ -143,10 +164,67 @@ public class ABB {
                 exito = eliminarAux(comp, nodo.getIzq());
             } else {
                 exito = eliminarAux(comp, nodo.getDer());
+=======
+    private boolean getBooleanEliminado() {
+        //Metodos para guardar cuando el metodo logro eliminar
+        boolean temp = this.booleanEliminado;
+        this.booleanEliminado = false;
+        return temp;
+        //Vemos si Logro eliminar , siempre que veamos lo deja en false, asi si es true solo podemos obtenerlo una ves
+    }
+    private void eliminarRaiz() {
+        int caso = obtenerCaso(this.raiz);
+        switch (caso) {
+            case 1:
+                this.raiz = null;
+                break;
+            case 2:
+                this.raiz = this.raiz.getIzq();
+                break;
+            case 4:
+                this.raiz = this.raiz.getDer();
+                break;
+            case 3:
+                //Revisar
+                this.raiz.setElem(eliminarCaso3(this.raiz.getIzq(), this.raiz));
+                break;
+        }
+        this.booleanEliminado = true;
+    }
+
+    private boolean eliminarAux(Comparable comp, NodoArbol nodo) {
+        boolean posicionParaEliminar = false;
+        boolean nodoBuscado = false;
+        if (nodo != null) {
+            int compareTo = nodo.getElem().compareTo(comp);
+            char posc = 'X';
+            if (compareTo == 0) {
+                nodoBuscado = true;
+            } else {
+                if (compareTo > 0) {
+                    posicionParaEliminar = eliminarAux(comp, nodo.getIzq());
+                    posc = 'I';
+                }else{
+                    posicionParaEliminar = eliminarAux(comp, nodo.getDer());
+                    posc = 'D';
+                }
+            }
+            if (posicionParaEliminar) {
+                eliminarYaEncontrado(nodo, posc);
+                //si entra aca significa que encontramos el elemento para eliminar
+                this.booleanEliminado = true;
+                //le decimos que logramos eliminar
+            }
+            if (nodoBuscado) {
+                posicionParaEliminar = true;
+            }else{
+                posicionParaEliminar = false;
+>>>>>>> ff53672660e2cd2fc80c5ad8616f7a0c307be1bb
             }
         }
-        return exito;
+        return posicionParaEliminar;
     }
+<<<<<<< HEAD
 
     private void intercambiar(NodoArbol nodo, NodoArbol nodo2, char c) {
 
@@ -159,10 +237,64 @@ public class ABB {
             nodo = null;
         } else {
             remplazarPorCandidato(nodo.getDer());
+=======
+    
+    private void eliminarYaEncontrado(NodoArbol nodo ,char posc) {
+        int caso;
+        if (posc == 'I') {
+            caso = obtenerCaso(nodo.getIzq());
+        } else {
+            caso = obtenerCaso(nodo.getDer());
+        }
+        switch (caso) {
+            case 1:
+                if (posc == 'I') {
+                    nodo.setIzq(null);
+                } else {
+                    nodo.setDer(null);
+                }
+                break;
+            case 2:
+                // Tiene solo hijo izquierdo
+                if (posc == 'I') {
+                    nodo.setIzq(nodo.getIzq().getIzq());
+                } else {
+                    nodo.setDer(nodo.getDer().getIzq());
+                }
+                break;
+            case 3:
+                // Hacer proximamente
+                if (posc == 'I') {
+                    nodo.getIzq().setElem(eliminarCaso3(this.raiz.getIzq(), this.raiz));
+                } else {
+                    nodo.getDer().setElem(eliminarCaso3(this.raiz.getIzq(), this.raiz));
+                }
+                break;
+            case 4:
+                if (posc == 'I') {
+                    nodo.setIzq(nodo.getIzq().getDer());
+                } else {
+                    nodo.setDer(nodo.getDer().getDer());
+                }
+                break;
+        }
+    }
+    private Comparable eliminarCaso3(NodoArbol hijo , NodoArbol padre) {
+        Comparable retorna = null;
+        if (hijo.getDer() == null) {
+            retorna = hijo.getElem();
+            //Eliminamos si es der o izq
+            if (padre.getIzq().equals(hijo)) {
+                padre.setIzq(null);
+            }else{
+                padre.setDer(null);
+            }
+        }else{
+            retorna = eliminarCaso3(hijo.getDer(), hijo);
+>>>>>>> ff53672660e2cd2fc80c5ad8616f7a0c307be1bb
         }
         return retorna;
     }
-
     private String stringAux(NodoArbol nodo, String cadena) {
         String izq = " ";
         String der = " ";
@@ -181,6 +313,7 @@ public class ABB {
             cadena = stringAux(nodo.getDer(), cadena);
         return cadena;
     }
+<<<<<<< HEAD
 
     public Lista listarMayorIgual(Comparable comp) {
         Lista lista = new Lista();
@@ -214,4 +347,6 @@ public class ABB {
         }
     }
 
+=======
+>>>>>>> ff53672660e2cd2fc80c5ad8616f7a0c307be1bb
 }

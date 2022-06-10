@@ -1,9 +1,9 @@
 package conjuntista;
 
 public class NodoArbol {
-    Comparable elem;
-    NodoArbol izq;
-    NodoArbol der;
+    private Comparable elem;
+    private NodoArbol izq;
+    private NodoArbol der;
     public NodoArbol(Comparable elem){
         this.elem = elem;
     }

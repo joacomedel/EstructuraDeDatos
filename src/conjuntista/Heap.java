@@ -3,9 +3,9 @@ package conjuntista;
 
 
 public class Heap {
-    int tamanio = 10;
-    Comparable[] heap;
-    int ultimo = 0;
+    private int tamanio = 10;
+    private Comparable[] heap;
+    private int ultimo = 0;
 
     // minimo
     public Heap() {
