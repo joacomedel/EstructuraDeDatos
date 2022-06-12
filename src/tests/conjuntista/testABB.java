@@ -4,17 +4,18 @@ public class testABB {
     public static void main(String[] args) {
         ABB arbol = new ABB();
 
-        arbol.insertar(1);
-        arbol.insertar(0);
-        arbol.insertar(3);
-        arbol.insertar(4);
         arbol.insertar(10);
-        arbol.insertar(6);
         arbol.insertar(5);
-        arbol.insertar(2);
+        arbol.insertar(3);
+        arbol.insertar(12);
+        arbol.insertar(11);
+        arbol.insertar(15);
+        arbol.insertar(20);
+        arbol.insertar(16);
+        arbol.insertar(13);
+        arbol.insertar(14);
         System.out.println(arbol);
-        System.out.println(arbol.eliminar(0));
-        System.out.println(arbol);
+        System.out.println(arbol.listarMayorIgual(15));
         
     }
 }
