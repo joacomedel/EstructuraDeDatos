@@ -5,19 +5,18 @@ import lineales.dinamicas.Lista;
 public class testArbolGen {
     public static void main(String[] args) {
         ArbolGen arbol = new ArbolGen();
-        arbol.insertar('A', 'S');
-        arbol.insertar('B', 'A');
-        arbol.insertar('D', 'B');
-        arbol.insertar('C', 'A');
-        arbol.insertar('E', 'C');
-        arbol.insertar('G', 'E');
-        arbol.insertar('H', 'E');
-        arbol.insertar('E', 'C');
-        Lista lista = new Lista();
-        lista.insertar('A', 1);
-        lista.insertar('C', 2);
-        lista.insertar('E', 3);
-        System.out.println(arbol.verificarCamino(lista)); 
+        arbol.insertar(14, 'S');
+        arbol.insertar(0, 14);
+        arbol.insertar(17, 0);
+        arbol.insertar(7, 0);
+        arbol.insertar(8, 0);
+        arbol.insertar(9, 7);
+        arbol.insertar(11, 14);
+        arbol.insertar(10, 11);
+        arbol.insertar(47, 11);
+        System.out.println(arbol);
+        arbol.eliminarConDescendientes(7);
+        System.out.println(arbol);
 
     }
     

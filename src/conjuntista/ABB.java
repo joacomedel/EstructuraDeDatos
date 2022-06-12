@@ -2,7 +2,6 @@ package conjuntista;
 
 import javax.lang.model.util.ElementScanner14;
 
-import lineales.dinamicas.Nodo;
 import lineales.dinamicas.Lista;
 
 public class ABB {
@@ -55,7 +54,7 @@ public class ABB {
         if (nodo.getIzq() == null && nodo.getDer() == null) {
             caso = 1; // Caso 1 de la teoria , es hoja
         } else {
-            if (nodo.getIzq() == null && nodo.getDer() != null) {
+            if (nodo.getIzq() == null && nodo.getDer() != null ) {
                 caso = 4; // Caso 2 tiene solo derecho
             } else {
                 if ((nodo.getIzq() != null && nodo.getDer() == null)) {
@@ -63,7 +62,7 @@ public class ABB {
                 } else {
                     caso = 3; // Caso 3 tiene dos hijos
                 }
-
+                
             }
         }
         return caso;
@@ -127,14 +126,12 @@ public class ABB {
     }
 
     private boolean getBooleanEliminado() {
-        // Metodos para guardar cuando el metodo logro eliminar
+        //Metodos para guardar cuando el metodo logro eliminar
         boolean temp = this.booleanEliminado;
         this.booleanEliminado = false;
         return temp;
-        // Vemos si Logro eliminar , siempre que veamos lo deja en false, asi si es true
-        // solo podemos obtenerlo una ves
+        //Vemos si Logro eliminar , siempre que veamos lo deja en false, asi si es true solo podemos obtenerlo una ves
     }
-
     private void eliminarRaiz() {
         int caso = obtenerCaso(this.raiz);
         switch (caso) {
@@ -148,7 +145,7 @@ public class ABB {
                 this.raiz = this.raiz.getDer();
                 break;
             case 3:
-                // Revisar
+                //Revisar
                 this.raiz.setElem(eliminarCaso3(this.raiz.getIzq(), this.raiz));
                 break;
         }
@@ -167,27 +164,27 @@ public class ABB {
                 if (compareTo > 0) {
                     posicionParaEliminar = eliminarAux(comp, nodo.getIzq());
                     posc = 'I';
-                } else {
+                }else{
                     posicionParaEliminar = eliminarAux(comp, nodo.getDer());
                     posc = 'D';
                 }
             }
             if (posicionParaEliminar) {
                 eliminarYaEncontrado(nodo, posc);
-                // si entra aca significa que encontramos el elemento para eliminar
+                //si entra aca significa que encontramos el elemento para eliminar
                 this.booleanEliminado = true;
-                // le decimos que logramos eliminar
+                //le decimos que logramos eliminar
             }
             if (nodoBuscado) {
                 posicionParaEliminar = true;
-            } else {
+            }else{
                 posicionParaEliminar = false;
             }
         }
         return posicionParaEliminar;
     }
-
-    private void eliminarYaEncontrado(NodoArbol nodo, char posc) {
+    
+    private void eliminarYaEncontrado(NodoArbol nodo ,char posc) {
         int caso;
         if (posc == 'I') {
             caso = obtenerCaso(nodo.getIzq());
@@ -227,23 +224,21 @@ public class ABB {
                 break;
         }
     }
-
-    private Comparable eliminarCaso3(NodoArbol hijo, NodoArbol padre) {
+    private Comparable eliminarCaso3(NodoArbol hijo , NodoArbol padre) {
         Comparable retorna = null;
         if (hijo.getDer() == null) {
             retorna = hijo.getElem();
-            // Eliminamos si es der o izq
+            //Eliminamos si es der o izq
             if (padre.getIzq().equals(hijo)) {
                 padre.setIzq(null);
-            } else {
+            }else{
                 padre.setDer(null);
             }
-        } else {
+        }else{
             retorna = eliminarCaso3(hijo.getDer(), hijo);
         }
         return retorna;
     }
-
     private String stringAux(NodoArbol nodo, String cadena) {
         String izq = " ";
         String der = " ";
@@ -274,24 +269,24 @@ public class ABB {
     private void listarMayorIgualAux(Lista lista, NodoArbol nodo, Comparable comp) {
         if (nodo != null) {
             int compareTo = nodo.getElem().compareTo(comp);
-            if (compareTo == 0) {
-                listarMayorIgualAux2(lista, nodo.getDer());
-                lista.insertar(nodo.getElem(), lista.longitud() + 1);
+            if (compareTo >= 0) {
+                listarMayorIgualAux2(lista, nodo, comp);
             } else {
-                if (compareTo > 0) {
-                    listarMayorIgualAux2(lista, nodo);
-                } else {
-                    listarMayorIgualAux(lista, nodo.getDer(), comp);
-                }
+                listarMayorIgualAux(lista, nodo.getDer(), comp);
             }
         }
     }
 
-    private void listarMayorIgualAux2(Lista lista, NodoArbol nodo) {
+    private void listarMayorIgualAux2(Lista lista, NodoArbol nodo,Comparable comp) {
         if (nodo != null) {
-            listarMayorIgualAux2(lista, nodo.getDer());
-            lista.insertar(nodo.getElem(), lista.longitud() + 1);
-            listarMayorIgualAux2(lista, nodo.getIzq());
+            Boolean esMayorIgual = nodo.getElem().compareTo(comp) >= 0;
+            if (esMayorIgual) {
+                listarMayorIgualAux2(lista, nodo.getIzq(), comp);
+                lista.insertar(nodo.getElem(), 1);
+                listarMayorIgualAux2(lista, nodo.getDer(), comp);
+            }else{
+                listarMayorIgualAux2(lista, nodo.getDer(), comp);
+            }
         }
     }
 

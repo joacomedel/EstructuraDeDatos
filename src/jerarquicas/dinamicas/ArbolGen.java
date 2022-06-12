@@ -81,9 +81,9 @@ public class ArbolGen {
                 }
             }
             if (temp == null) {
-                temp = padreAux(obj, nodo.hijoIzq);
+                temp = padreAux(obj, nodo.getHijoIzq());
                 if (temp == null) {
-                    temp = padreAux(obj, nodo.hermanoDer);
+                    temp = padreAux(obj, nodo.getHermanoDer());
                 }
             }
 
@@ -406,16 +406,16 @@ public class ArbolGen {
         return exito;
     }
 
-    private boolean verificarCaminoAux(Lista lista , NodoGen nodo) {
+    private boolean verificarCaminoAux(Lista lista, NodoGen nodo) {
         boolean termino = false;
         if (nodo != null && !lista.esVacia()) {
             if (lista.recuperar(1).equals(nodo.getElem())) {
                 Boolean esHoja = nodo.getHijoIzq() == null;
                 Object obj = lista.recuperar(1);
                 lista.eliminar(1);
-                termino = lista.esVacia()&& esHoja;
+                termino = lista.esVacia() && esHoja;
                 if (!termino && !lista.esVacia()) {
-                    termino = verificarCaminoAux(lista,nodo.getHijoIzq());
+                    termino = verificarCaminoAux(lista, nodo.getHijoIzq());
                     if (!termino) {
                         if (nodo.getHijoIzq() != null) {
                             NodoGen der = nodo.getHijoIzq().getHermanoDer();
@@ -434,4 +434,93 @@ public class ArbolGen {
         return termino;
     }
 
+    public Lista listarEntreNiveles(int niv1, int niv2) {
+        Lista lista = new Lista();
+        int nivMin = Math.min(niv1, niv2);
+        int nivMax = Math.max(niv1, niv2);
+        if (!this.esVacio()) {
+            if (nivMin != 0) {
+                listarEntreNivelesAux(nivMin, nivMax, this.raiz, 0, lista);
+            } else {
+                listarEntreNivelesHasta(nivMax, this.raiz, 0, lista);
+            }
+        }
+        return lista;
+    }
+
+    private void listarEntreNivelesAux(int nivMin, int nivMax, NodoGen nodo, int nivAct, Lista lista) {
+        if (nodo != null) {
+            //Busca un padre en el que sus hijos entre en el rango de niveles 
+            if (nivAct + 1 == nivMin) {
+                NodoGen temp = nodo.getHijoIzq();
+                while (temp != null) {
+                    listarEntreNivelesHasta(nivMax, temp, nivAct + 1, lista);
+                    temp = temp.getHermanoDer();
+                }
+            }else {
+                NodoGen temp = nodo.getHijoIzq();
+                while (temp != null) {
+                    listarEntreNivelesAux(nivMin, nivMax, temp, nivAct + 1, lista);
+                    temp = temp.getHermanoDer();
+                }
+        } 
+        }
+    }
+
+    private void listarEntreNivelesHasta(int nivMax, NodoGen nodo, int nivAct, Lista lista) {
+        if (nodo != null && nivAct <= nivMax) {
+            listarEntreNivelesHasta(nivMax, nodo.getHijoIzq(), nivAct+1, lista);
+            lista.insertar(nodo.getElem(), lista.longitud() + 1);
+            if (nodo.getHijoIzq() != null) {
+                NodoGen temp = nodo.getHijoIzq().getHermanoDer();
+                while (temp != null) {
+                    listarEntreNivelesHasta(nivMax, temp, nivAct + 1, lista);
+                    temp = temp.getHermanoDer();
+                }
+            }
+        }
+    }
+    public void eliminarConDescendientes(Object obj){
+        if(!this.esVacio()){
+            if (this.raiz.equals(obj)) {
+                this.vaciar();
+            }else{
+                eliminarConDescendientesAux(this.raiz,obj);
+            }
+            
+        }
+    }
+    private boolean eliminarConDescendientesAux(NodoGen nodo,Object obj){
+        boolean esAnterior = false;
+        if (nodo != null) {
+            int caso = -1; //caso 0 hijIzq , caso 1 her
+            if (nodo.getElem().equals(obj)) {
+                esAnterior = true;
+            }else{
+                esAnterior = eliminarConDescendientesAux(nodo.getHijoIzq(), obj);
+                if (esAnterior ) {
+                    caso = 0;
+                }else{
+                    esAnterior = eliminarConDescendientesAux(nodo.getHermanoDer(), obj);
+                    if (esAnterior) {
+                        caso = 1;
+                    }
+                }
+                if (esAnterior) {
+                    switch (caso) {
+                        case 0:
+                                nodo.setHijoIzq(nodo.getHijoIzq().getHermanoDer());
+                            break;
+                        case 1:
+                            nodo.setHermanoDer(nodo.getHermanoDer().getHermanoDer());
+                            break;
+                    }
+                    esAnterior = false;
+                }
+            }
+        }
+
+        return esAnterior;
+    }
 }
+    
